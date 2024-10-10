@@ -1,7 +1,4 @@
-latitude,longitude,elevation,utc_offset_seconds,timezone,timezone_abbreviation
-35.676624,139.69112,40.0,0,GMT,GMT
-
-time,temperature_2m_mean (°C),apparent_temperature_max (°C),apparent_temperature_min (°C),precipitation_sum (mm)
+time,temperature_mean,apparent_temperature_max,apparent_temperature_min,precipitation_sum
 1940-01-01,0.7,-3.2,-6.1,NaN
 1940-01-02,0.5,-0.1,-4.9,0.00
 1940-01-03,3.1,5.9,-4.8,0.00
