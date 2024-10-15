@@ -1,5 +1,4 @@
 time,temperature_mean,apparent_temperature_max,apparent_temperature_min,precipitation_sum
-1940-01-01,0.7,-3.2,-6.1,NaN
 1940-01-02,0.5,-0.1,-4.9,0.00
 1940-01-03,3.1,5.9,-4.8,0.00
 1940-01-04,5.0,5.4,-1.9,0.00
