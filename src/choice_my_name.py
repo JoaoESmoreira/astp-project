@@ -24,14 +24,14 @@ class Plotify():
     def __init__(self):
         sns.set_style("darkgrid")
 
-    def plot(self, xl, yl, titles, xlabel="", ylabel="", trend=False):
+    def plot(self, xl, yl, titles, xlabel="", ylabel="", **kwargs):#trend=False):
         _, axes = plt.subplots(len(titles), figsize=(12, 6))
         for i in range(len(titles)):
             x = xl[i]
             y = yl[i]
             sns.lineplot(ax=axes[i], x=x, y=y)
 
-            if trend:
+            if 'trend' in kwargs and kwargs['trend']:
                 coefficients = np.polyfit(x, y, 1)
                 p = np.poly1d(coefficients)
                 sns.lineplot(ax=axes[i], x=x, y=p(x), lw=1.2, label="Trend") # color="darkorange", linestyle='--', 
@@ -42,12 +42,18 @@ class Plotify():
         plt.tight_layout()
         plt.show()
 
-    def scatter(self, xl, yl, titles, xlabel="", ylabel=""):
+    def scatter(self, xl, yl, titles, xlabel="", ylabel="", **kwargs):
         _, axes = plt.subplots(len(titles), figsize=(12, 6))
         for i in range(len(titles)):
             x = xl[i]
             y = yl[i]
             sns.scatterplot(ax=axes[i], x=x, y=y)
+
+            if 'corr' in kwargs and kwargs['corr']:
+                n = x.shape[0]
+                y = np.ones(n)*(1.96/np.sqrt(n))
+                sns.lineplot(ax=axes[i], x=x, y=y, lw=1.3, linestyle='--', color="darkorange") # color="darkorange", linestyle='--', 
+                sns.lineplot(ax=axes[i], x=x, y=-y, lw=1.3, linestyle='--', color="darkorange") # color="darkorange", linestyle='--', 
 
             axes[i].set_xlabel(xlabel)
             axes[i].set_ylabel(ylabel)
@@ -115,7 +121,7 @@ class Correlogram():
             self.x.append(np.arange(len(corr)))
 
     def plotify(self, n):
-        self.plotter.scatter(self.x, self.corr, self.titles, "Lag", "Autocorrelation")
+        self.plotter.scatter(self.x, self.corr, self.titles, "Lag", "Autocorrelation", corr=True)
 
     def stats_tests(self):
         for i in range(len(self.titles)):
@@ -136,9 +142,9 @@ if __name__ == "__main__":
 
     s = p.empty_temperature_assement()
     s.differentiation(f=365)
-    s.fft(t=1/365)
-    s.plotfy_fft()
-    s.plotfy_diff(n=600)
+    # s.fft(t=1/365)
+    # s.plotfy_fft()
+    # s.plotfy_diff(n=600)
 
     c = s.create_correlogram()
     c.correlogram(365)
