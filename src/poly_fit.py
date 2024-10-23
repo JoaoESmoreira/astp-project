@@ -29,7 +29,7 @@ class MA(Model):
 
     def remove_trend(self):
         N = 365*5 
-        self.titles = ['Linear trend', "Quadratic trend", "20 degree trend"]
+        self.titles = ['Linear trend removal', "Quadratic trend removal", "20 degree trend removal"]
 
         for i in range(1, len(self.dfs)):
             self.dfs[i] = self.original_ts[:N] - self.dfs[i]
