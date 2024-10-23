@@ -20,6 +20,12 @@ class Model:
         x = [np.arange(self.dfs[i].shape[0]) for i in range(len(self.dfs))]
 
         self.plotter.plot(x, y, self.titles, "Time", "Mean Temperature (Cº)", trend=True)
+    
+    def plot_one(self):
+        y = [self.dfs[i] for i in range(len(self.dfs))]
+        x = [np.arange(self.dfs[i].shape[0]) for i in range(len(self.dfs))]
+
+        self.plotter.plot_only_one(x, y, self.titles, "Time", "Mean Temperature (Cº)")
 
     def create_correlogram(self):
         return Correlogram(self.dfs, self.titles)

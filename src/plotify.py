@@ -6,7 +6,19 @@ class Plotify():
     def __init__(self):
         sns.set_style("darkgrid")
 
-    def plot(self, xl, yl, titles, xlabel="", ylabel="", **kwargs):#trend=False):
+    def plot_only_one(self, xl, yl, titles, xlabel="", ylabel="", **kwargs):
+        _ = plt.figure(figsize=(12, 6))
+        for i in range(len(titles)):
+            x = xl[i]
+            y = yl[i]
+            sns.lineplot(x=x, y=y, label=titles[i])
+
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
+        plt.tight_layout()
+        plt.show()
+
+    def plot(self, xl, yl, titles, xlabel="", ylabel="", **kwargs):
         _, axes = plt.subplots(len(titles), figsize=(12, 6))
         for i in range(len(titles)):
             x = xl[i]
