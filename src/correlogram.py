@@ -17,7 +17,7 @@ class Correlogram():
     def correlation(self, values, n):
         df = pd.DataFrame(data=values, columns=['values'])
         corr = np.zeros(n)
-        for lag in range(365):
+        for lag in range(n):
             corr[lag] = df['values'].autocorr(lag=lag)
         return corr
 
