@@ -30,11 +30,11 @@ class AssByDiff():
         self.plotter = Plotify()
 
     def differentiation(self, f: int):
-        self.titles = ['Original',  'Delta(n)', 'Delta_12(Delta(n))']
-        original_median = self.original_ts - self.original_ts.mean()
-        delta = np.diff(self.original_ts)
-        delta_f = np.diff(delta, n=f)
-        self.dfs = [original_median, delta, delta_f]
+        unData = pd.read_csv("../data/open_meteo_tokyo_multivariative.csv")
+        unTS = pd.Series(data=np.array(unData["temperature_mean"]))
+
+        self.titles = ['Original', 'Delta(n)', 'Delta_12(Delta(n))']
+        self.dfs = [(unTS - unTS.mean()), unTS.diff(), unTS.diff().diff(periods=f)]
 
     def fft(self, t: float):
         for i in range(len(self.titles)):
@@ -67,9 +67,9 @@ if __name__ == "__main__":
     s.differentiation(f=365)
     s.fft(t=1/365)
     s.plotfy_fft()
-    s.plotfy_diff(n=600)
+    s.plotfy_diff(n=1000)
 
-    c = s.create_correlogram()
-    c.correlogram(365)
-    c.plotify(365)
-    c.stats_tests()
+    # c = s.create_correlogram()
+    # c.correlogram(365)
+    # c.plotify(365)
+    # c.stats_tests()

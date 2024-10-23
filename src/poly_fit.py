@@ -33,6 +33,7 @@ class MA(Model):
 
         for i in range(1, len(self.dfs)):
             self.dfs[i] = self.original_ts[:N] - self.dfs[i]
+        self.dfs = self.dfs[1:]
 
     def plotfy(self):
         y = [self.dfs[i] for i in range(len(self.dfs))]
