@@ -34,11 +34,15 @@ class AssByDiff(Model):
         unData = pd.read_csv("../data/open_meteo_tokyo_multivariative.csv")
         unTS = pd.Series(data=np.array(unData["temperature_mean"]))
 
+        unTS = unTS[:unTS.shape[0] // 10]
+
+        self.name = "diff"
         self.titles = ['Original', 'Delta(n)', 'Delta_12(Delta(n))']
         self.dfs = [(unTS - unTS.mean()), unTS.diff(), unTS.diff().diff(periods=f)]
-        for i in range(3):
-            self.dfs[i] = np.array(self.dfs[i])
-        self.name = "diff"
+
+        self. dfs = [np.array(self.dfs[i]) for i in range(3)]
+        self.dfs[1] = self.dfs[1][1:]
+        self.dfs[2] = self.dfs[2][f+1:]
 
     # def fft(self, t: float):
     #     for i in range(len(self.titles)):
@@ -69,12 +73,12 @@ if __name__ == "__main__":
 
     s = p.empty_temperature_assement()
     s.main()
-    # s.plotfy()
+    s.plotfy()
     # s.fft(t=1/365)
     # s.plotfy_fft()
     # s.plotfy_diff(n=1000)
 
     c = s.create_correlogram()
     c.correlogram(365)
-    # c.plotify(365)
+    c.plotify(365)
     c.stats_tests()
