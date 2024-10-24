@@ -7,9 +7,10 @@ from plotify import Plotify
 
 
 class Correlogram():
-    def __init__(self, lTS: list[np.ndarray], titles: list[str]):
+    def __init__(self, lTS: list[np.ndarray], titles: list[str], name: str):
         self.lTS = lTS # list of time series
         self.titles = titles
+        self.name = name
         self.x = []
         self.corr = []
         self.plotter = Plotify()
@@ -29,7 +30,7 @@ class Correlogram():
             self.x.append(np.arange(len(corr)))
 
     def plotify(self, n):
-        self.plotter.scatter(self.x, self.corr, self.titles, "Lag", "Autocorrelation", corr=True)
+        self.plotter.scatter(self.x, self.corr, self.titles, self.name, "Lag", "Autocorrelation", corr=True)
 
     def stats_tests(self):
         for i in range(len(self.titles)):

@@ -11,7 +11,6 @@ class Problem(Problem):
     def empty_solution(self):
         LS = Lowess(np.array(self.df['temperature_mean']))
         LS.main()
-        LS.remove_trend()
         return EpochAveraging(LS.dfs[2])
 
 class EpochAveraging(Model):
@@ -36,16 +35,17 @@ class EpochAveraging(Model):
 
         psNoTrendNoSeas = psNoTrend - Seasonal
 
+        self.titles = ['Serie witout Trend',  "Serie witout seasonality"]
+        self.labels = ['Serie witout Trend',  "Seasonality Component"]
         self.dfs = [self.original_ts, psNoTrendNoSeas]
-        self.titles = ['Serie witout Trend',  "Sazonality Component"]
-
+        self.seasons = [self.original_ts, Seasonal]
+        self.name = "filtering"
 
 if __name__ == "__main__":
     path = "../data/open_meteo_tokyo_multivariative.csv"
     p = Problem.read_input(path)
 
     LS = p.empty_solution()
-    LS.dft(samp_freq=365)
     LS.main()
     LS.plotfy()
 

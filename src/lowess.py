@@ -13,7 +13,7 @@ class Problem(Problem):
 class Lowess(Model):
     def main(self):
         tempTS = self.original_ts
-        tempTS = tempTS[-365*5:]
+        tempTS = tempTS[:tempTS.shape[0] // 10]
 
         span_5 = 0.05
         span_365 = 0.365
@@ -21,15 +21,14 @@ class Lowess(Model):
         smooth5 = sm.nonparametric.lowess(tempTS, np.arange(len(tempTS)), frac=span_5, return_sorted=False)
         smooth365 = sm.nonparametric.lowess(tempTS, np.arange(len(tempTS)), frac=span_365, return_sorted=False)
 
+        self.name = "lowess"
         self.titles = ['Original',  'M 5', "M 365"]
+        self.labels = ['Original',  'Trend M-5', "Trend M-365"]
         self.dfs = [tempTS, smooth5, smooth365]
-
-    def remove_trend(self):
-        tempTS = self.original_ts
-        tempTS = tempTS[-365*5:]
-
+        self.trends = [tempTS, smooth5, smooth365]
         for i in range(2):
             self.dfs[1+i] = tempTS - self.dfs[1+i]
+
 
 
 if __name__ == "__main__":
@@ -38,12 +37,10 @@ if __name__ == "__main__":
 
     LS = p.empty_solution()
     LS.main()
-    LS.plot_one()
-    LS.remove_trend()
     LS.plotfy()
 
-    # c = LS.create_correlogram()
-    # c.correlogram(365)
-    # c.plotify(365)
+    c = LS.create_correlogram()
+    c.correlogram(365)
+    c.plotify(365)
 
-    # c.stats_tests()
+    c.stats_tests()

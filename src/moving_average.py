@@ -10,15 +10,18 @@ class Problem(Problem):
 
 class MA(Model):
     def main(self, f):
-        self.titles = ['Original',  'Moving Average', "diff"]
-
         ws = 30 # window size
-        y = self.original_ts.copy()
-        for i in range(0, self.original_ts.shape[0] - ws, ws):
-            y[i:i+ws] -= y[i:i+ws].mean()
+        y = self.original_ts
+        y = self.original_ts[:y.shape[0] // 16]
+        yy = y.copy()
+        for i in range(0, y.shape[0], ws):
+            end = min(i + ws, y.shape[0])  # Handle cases where the window exceeds the length of the array
+            if end > i:  # Ensure that the slice is non-empty
+                y[i:end] -= y[i:end].mean()
 
-        # self.dfs = [self.original_ts[:365*5], y[:365*5]]
-        self.dfs = [self.original_ts, y[:-30], np.diff(y, n=365)]
+        self.name = "moving_average"
+        self.titles = ['Original',  'Moving Average']
+        self.dfs = [yy, y]
 
 
 if __name__ == "__main__":

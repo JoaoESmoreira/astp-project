@@ -10,10 +10,8 @@ class Problem(Problem):
 
 class MA(Model):
     def main(self):
-        self.titles = ['Original TS',  'Linear fitting', "Quadratic fitting", "20 degree fitting"]
-
-        N = 365*5
-        y = self.original_ts[:N]
+        y = self.original_ts
+        y = self.original_ts[:y.shape[0] // 16]
         x = np.arange(len(y))
 
         linear_coefficients = np.polyfit(x, y, 1)
@@ -23,22 +21,15 @@ class MA(Model):
         quadratic_trend = np.poly1d(quadratic_coefficients)
 
         n_coefficients = np.polyfit(x, y, 20)
-        n_trend = np.poly1d(n_coefficients)\
+        n_trend = np.poly1d(n_coefficients)
 
-        self.dfs = [self.original_ts[:N], linear_trend(x), quadratic_trend(x), n_trend(x)]
-
-    def remove_trend(self):
-        N = 365*5 
-        self.titles = ['Linear trend removal', "Quadratic trend removal", "20 degree trend removal"]
-
+        self.name = "poly_fit"
+        self.labels = ['Original TS',  'Linear trend', "Quadratic trend", "20 degree trend"]
+        self.titles = ['Original TS',  'Linear fitting', "Quadratic fitting", "20 degree fitting"]
+        self.dfs = [y, linear_trend(x), quadratic_trend(x), n_trend(x)]
+        self.trends = [y, linear_trend(x), quadratic_trend(x), n_trend(x)]
         for i in range(1, len(self.dfs)):
-            self.dfs[i] = self.original_ts[:N] - self.dfs[i]
-        self.dfs = self.dfs[1:]
-    def plotfy(self):
-        y = [self.dfs[i] for i in range(len(self.dfs))]
-        x = [np.arange(self.dfs[i].shape[0]) for i in range(len(self.dfs))]
-
-        self.plotter.plot(x, y, self.titles, "Time", "Mean Temperature (Cº)", trend=False)
+            self.dfs[i] = y - self.dfs[i]
 
 
 if __name__ == "__main__":
@@ -47,12 +38,10 @@ if __name__ == "__main__":
 
     ma = p.empty_solution()
     ma.main()
-    ma.plot_one()
-    ma.remove_trend()
     ma.plotfy()
 
     c = ma.create_correlogram()
-    c.correlogram(365*3)
-    c.plotify(365*3)
+    c.correlogram(365)
+    c.plotify(365)
 
     c.stats_tests()

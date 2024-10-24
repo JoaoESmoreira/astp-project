@@ -26,10 +26,8 @@ class MaSmoth(Model):
         return xf
 
     def main(self):
-        self.titles = ['Original',  'M 5', "M 365"]
-
         tempTS = self.original_ts
-        tempTS = tempTS[-365*5:]
+        tempTS = tempTS[:tempTS.shape[0] // 10]
 
         M = 5
         omega = np.ones(M) * (1 / float(M))
@@ -37,14 +35,13 @@ class MaSmoth(Model):
 
         M = 365
         omega = np.ones(M) * (1 / float(M))
-        smooth13 = self._maSmooth(tempTS, omega, data_aug=True)
+        smooth365= self._maSmooth(tempTS, omega, data_aug=True)
 
-        self.dfs = [tempTS, smooth5, smooth13]
-
-    def remove_trend(self):
-        tempTS = self.original_ts
-        tempTS = tempTS[-365*5:]
-
+        self.titles = ['Original',  'M 5', "M 365"]
+        self.labels = ['Original',  'Trend M-5', "Trend M-365"]
+        self.dfs = [tempTS, smooth5, smooth365]
+        self.trends = [tempTS, smooth5, smooth365]
+        self.name = "Ma_smothing"
         for i in range(2):
             self.dfs[1+i] = tempTS - self.dfs[1+i]
 
@@ -55,8 +52,6 @@ if __name__ == "__main__":
 
     LS = p.empty_solution()
     LS.main()
-    # LS.plot_one()
-    LS.remove_trend()
     LS.plotfy()
 
     c = LS.create_correlogram()
