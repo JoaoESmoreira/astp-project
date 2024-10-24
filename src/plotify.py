@@ -36,6 +36,20 @@ class Plotify():
         plt.tight_layout()
         plt.show()
 
+    def plotTS(self, x, y, xlabel="", ylabel="", **kwargs):
+        _ = plt.figure(figsize=(12, 6))
+        sns.lineplot(x=x, y=y)
+
+        if 'trend' in kwargs and kwargs['trend']:
+            coefficients = np.polyfit(x, y, 1)
+            p = np.poly1d(coefficients)
+            sns.lineplot(x=x, y=p(x), lw=1.2, label="Trend") # color="darkorange", linestyle='--', 
+
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
+        plt.tight_layout()
+        plt.show()
+
     def scatter(self, xl, yl, titles, xlabel="", ylabel="", **kwargs):
         _, axes = plt.subplots(len(titles), figsize=(12, 6))
         for i in range(len(titles)):
