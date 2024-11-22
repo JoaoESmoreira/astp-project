@@ -5,11 +5,12 @@ import scipy.signal as scs
 
 from api import Model, Problem
 from lowess import Lowess
+from ma_smothing import MaSmoth
 
 
 class Problem(Problem):
     def empty_solution(self):
-        LS = Lowess(np.array(self.df['temperature_mean']))
+        LS = MaSmoth(np.array(self.df['temperature_mean']))
         LS.main()
         return EpochAveraging(LS.dfs[2])
 
@@ -27,18 +28,18 @@ class EpochAveraging(Model):
         return fTS
 
     def main(self):
-        psNoTrend = self.original_ts
+        psNoTrend = self.original_ts[:-100]
         samp_freq = 365
 
-        sos = scs.butter(N=5, fs=365, Wn=[1.4], btype='lowpass', output='sos')
+        sos = scs.butter(N=5, fs=samp_freq, Wn=[1.4], btype='lowpass', output='sos')
         Seasonal = scs.sosfiltfilt(sos, psNoTrend)
 
         psNoTrendNoSeas = psNoTrend - Seasonal
 
         self.titles = ['Serie witout Trend',  "Serie witout seasonality"]
         self.labels = ['Serie witout Trend',  "Seasonality Component"]
-        self.dfs = [self.original_ts, psNoTrendNoSeas]
-        self.seasons = [self.original_ts, Seasonal]
+        self.dfs = [psNoTrend, psNoTrendNoSeas]
+        self.seasons = [psNoTrend, Seasonal]
         self.name = "filtering"
 
 if __name__ == "__main__":

@@ -13,7 +13,7 @@ class Problem(Problem):
 class Lowess(Model):
     def main(self):
         tempTS = self.original_ts
-        tempTS = tempTS[:tempTS.shape[0] // 10]
+        tempTS = tempTS[:tempTS.shape[0] // 6]
 
         span_5 = 0.05
         span_365 = 0.365

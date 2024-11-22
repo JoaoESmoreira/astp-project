@@ -37,7 +37,7 @@ class AssByDiff(Model):
         unTS = unTS[:unTS.shape[0] // 10]
 
         self.name = "diff"
-        self.titles = ['Original', 'Delta(n)', 'Delta_12(Delta(n))']
+        self.titles = ['Original', 'Delta(n)', 'Delta_365(Delta(n))']
         self.dfs = [(unTS - unTS.mean()), unTS.diff(), unTS.diff().diff(periods=f)]
 
         self. dfs = [np.array(self.dfs[i]) for i in range(3)]

@@ -5,11 +5,12 @@ import statsmodels.api as sm
 
 from api import Model, Problem
 from lowess import Lowess
+from ma_smothing import MaSmoth
 
 
 class Problem(Problem):
     def empty_solution(self):
-        LS = Lowess(np.array(self.df['temperature_mean']))
+        LS = MaSmoth(np.array(self.df['temperature_mean']))
         LS.main()
         return EpochAveraging(LS.dfs[2])
 
@@ -41,10 +42,10 @@ if __name__ == "__main__":
 
     LS = p.empty_solution()
     LS.main()
-    LS.plotfy()
+    # LS.plotfy()
 
     c = LS.create_correlogram()
-    c.correlogram(365)
-    c.plotify(365)
+    # c.correlogram(365)
+    # c.plotify(365)
 
     c.stats_tests()

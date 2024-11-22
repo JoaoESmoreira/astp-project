@@ -38,10 +38,10 @@ if __name__ == "__main__":
 
     ma = p.empty_solution()
     ma.main()
-    ma.plotfy()
+    # ma.plotfy()
 
     c = ma.create_correlogram()
-    c.correlogram(365)
-    c.plotify(365)
+    # c.correlogram(365)
+    # c.plotify(365)
 
     c.stats_tests()

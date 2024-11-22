@@ -27,7 +27,7 @@ class MaSmoth(Model):
 
     def main(self):
         tempTS = self.original_ts
-        tempTS = tempTS[:tempTS.shape[0] // 10]
+        tempTS = tempTS[:tempTS.shape[0] // 6]
 
         M = 5
         omega = np.ones(M) * (1 / float(M))
