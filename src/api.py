@@ -5,6 +5,27 @@ import pandas as pd
 from plotify import Plotify
 from correlogram import Correlogram
 
+class ForecastModel:
+    def __init__(self, ts: np.ndarray):
+        self.original_ts = ts
+        self.plotter = Plotify()
+        self.titles = []
+        self.name = ""
+
+    def main(self):
+        raise NotImplementedError
+
+    def plotfy(self):
+        raise NotImplementedError
+    
+    def plot(self):
+        n = self.original_ts.shape[0]
+        self.plotter.plotTS(np.arange(n), self.original_ts, self.name, 'Time', 'Mean Temperature (Cº)')
+
+    def create_correlogram(self):
+        lTS = [self.original_ts]
+        return Correlogram(lTS, self.titles, self.name)
+
 class Model:
     def __init__(self, ts: np.ndarray):
         self.original_ts = ts

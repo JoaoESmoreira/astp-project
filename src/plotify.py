@@ -64,10 +64,13 @@ class Plotify():
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.tight_layout()
-        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"./images/plot_{name}_{timestamp}.png"
-        plt.savefig(filename)
-        plt.show()
+
+        if 'save' in kwargs and kwargs['save']:
+            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"./images/plot_{name}_{timestamp}.png"
+            plt.savefig(filename)
+        else:
+            plt.show()
 
     def scatter(self, xl, yl, titles, name, xlabel="", ylabel="", **kwargs):
         _, axes = plt.subplots(len(titles), figsize=(12, 6))
