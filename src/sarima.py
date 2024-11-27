@@ -70,7 +70,8 @@ class Sarima(ForecastModel):
                                     print("Q", Q)
                                     order = (p, d, q)
                                     seasonal_order = (P, D, Q, s)
-                                    aic, rmse = self._calculate_sarima_aic(train_data, val_data, order, seasonal_order)
+                                    aic, rmse = self._calculate_sarima_aic(train_data.values, val_data.values, order, seasonal_order)
+                                    print([p, d, q, P, D, Q, s, aic, rmse])
                                     writer.writerow([p, d, q, P, D, Q, s, aic, rmse])
 
                                     if aic < best_aic:
@@ -129,7 +130,7 @@ class Sarima(ForecastModel):
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"./images/plot_best_sarimax_forecast_{timestamp}.png"
         plt.savefig(filename)
-        plt.show()
+        # plt.show()
 
         error = self.calculate_metrics(test_data, forecast.predicted_mean)
         print("Linear Model - MSE:", error[0], "RMSE:", error[1], "MAE:", error[2], "MAPE:", error[3])
