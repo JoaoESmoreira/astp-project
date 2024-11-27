@@ -47,30 +47,38 @@ class Correlogram():
                 print('\t%s: %.3f' % (key, value))
             print()
     
-    def acf_pacf(self, seasonality):
-        lag = seasonality*5
+    def acf_pacf(self, seasonality, name=None):
+        lag = seasonality * 5
         lags = np.arange(0, lag, seasonality)
 
         df = self.lTS[0]
         df_diff = df.diff().dropna()
         df_diff_12 = df_diff.diff(12).dropna()
 
-        _, axes = plt.subplots(7, figsize=(8, 6))
-        tsaplots.plot_acf(df, lags=lag, ax=axes[0])
-        tsaplots.plot_acf(df_diff, lags=lag, ax=axes[1])
-        tsaplots.plot_acf(df_diff_12, lags=lag, ax=axes[2])
+        fig, axes = plt.subplots(3, 2, figsize=(12, 12))
+        axes = axes.flatten()
 
+        tsaplots.plot_acf(df_diff, lags=lag, ax=axes[0])
+        axes[0].set_title("ACF Delta(n)")
 
-        tsaplots.plot_acf(df_diff_12, lags=12, ax=axes[3])
-        tsaplots.plot_pacf(df_diff_12, lags=12, ax=axes[4])
-        tsaplots.plot_acf(df_diff_12, lags=lags, ax=axes[5])
-        tsaplots.plot_pacf(df_diff_12, lags=lags, ax=axes[6])
+        tsaplots.plot_acf(df_diff_12, lags=lag, ax=axes[1])
+        axes[1].set_title("ACF Delta_12(Delta(n))")
 
-        # axes[0].set_ylabel("Original")
-        # axes[1].set_ylabel("Delta(n)")
-        # axes[2].set_ylabel("Delta_12(Delta(n))")
-        # axes[3].set_ylabel("Delta_12(Delta(n))")
-        # axes[4].set_ylabel("Delta_12(Delta(n))")
+        tsaplots.plot_acf(df_diff_12, lags=12, ax=axes[2])
+        axes[2].set_title("ACF Delta_12(Delta(n))")
 
+        tsaplots.plot_pacf(df_diff_12, lags=12, ax=axes[3])
+        axes[3].set_title("PACF Delta_12(Delta(n))")
 
+        tsaplots.plot_acf(df_diff_12, lags=lags, ax=axes[4])
+        axes[4].set_title("ACF Delta_12(Delta(n))")
+
+        tsaplots.plot_pacf(df_diff_12, lags=lags, ax=axes[5])
+        axes[5].set_title("PACF Delta_12(Delta(n))")
+
+        if name:
+            import datetime
+            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"./images/plot_{name}_{timestamp}.png"
+            plt.savefig(filename)
         plt.show()
