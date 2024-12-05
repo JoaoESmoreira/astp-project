@@ -23,20 +23,6 @@ data = pd.DataFrame({'ts1': ts1, 'ts2': ts2, 'ts3': ts3}, index=time_index)
 data.plot(title="Séries Temporais")
 plt.show()
 
-# Exemplo 1: ARMAX
-armax_model = ARIMA(data['ts1'], order=(1, 0, 1), exog=exogenous)
-armax_fit = armax_model.fit()
-print("ARMAX Summary:\n", armax_fit.summary())
-
-# Exemplo 2: ARIMAX
-arimax_model = ARIMA(data['ts1'], order=(1, 1, 1), exog=exogenous)
-arimax_fit = arimax_model.fit()
-print("ARIMAX Summary:\n", arimax_fit.summary())
-
-# Exemplo 3: SARIMAX
-sarimax_model = SARIMAX(data['ts1'], order=(1, 1, 1), seasonal_order=(1, 1, 1, 12), exog=exogenous)
-sarimax_fit = sarimax_model.fit()
-print("SARIMAX Summary:\n", sarimax_fit.summary())
 
 # Exemplo 4: VAR
 var_model = VAR(data)
@@ -50,5 +36,4 @@ print("VARMAX Summary:\n", varmax_fit.summary())
 
 # Forecasts
 forecast_steps = 10
-print("ARMAX Forecast:", armax_fit.forecast(steps=forecast_steps, exog=exogenous[:forecast_steps]))
 print("VAR Forecast:", var_fit.forecast(y=data.values[-var_fit.k_ar:], steps=forecast_steps))
