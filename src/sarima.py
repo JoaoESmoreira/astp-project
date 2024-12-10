@@ -1,6 +1,8 @@
 
 import pandas as pd
 import numpy as np
+import seaborn as sns
+from statsmodels.graphics import tsaplots as tsa
 import matplotlib.pyplot as plt
 
 from sklearn.metrics import mean_squared_error, mean_absolute_error
@@ -151,12 +153,12 @@ class Sarima(ForecastModel):
         # D = 2
         # Q = 1
         # s = 12
-        d = 1   # there is a litle trend
-        D = 1   # there is a seasonality
+        d = 3   # there is a litle trend
+        D = 2   # there is a seasonality
         s = 12  # seasonality of periodicity
         p = 2   # number of samples out in PACS
-        q = 2  # number of samples out in ACS
-        P = 2   # number of samples out in PACS
+        q = 5  # number of samples out in ACS
+        P = 1   # number of samples out in PACS
         Q = 1   # number of samples out in ACS
         model = SARIMAX(train_data.values, order = (p, d, q), seasonal_order =(P, D, Q, s))
         model_fit = model.fit(disp=False)
@@ -185,6 +187,24 @@ class Sarima(ForecastModel):
         error = self.calculate_metrics(test_data, forecast.predicted_mean)
         print("Linear Model - MSE:", error[0], "RMSE:", error[1], "MAE:", error[2], "MAPE:", error[3])
         # Linear Model - MSE: 7.534434161310933 RMSE: 2.744892376999676 MAE: 2.396540783744191 MAPE: 16.495018718479017
+
+        train_fitted_values = model_fit.fittedvalues
+        train_residuals = train_data.values - train_fitted_values
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(train_data.index, train_residuals, marker='o', linestyle='-')
+        plt.plot(train_data.index, train_data.values, marker='o', linestyle='-')
+        plt.plot(test_data.index, forecast.predicted_mean, marker='o', linestyle='-')
+        plt.axhline(0, linestyle='--', color='gray', linewidth=1)
+        plt.title('Residuals Over Time (Training)')
+        plt.xlabel('Time')
+        plt.ylabel('Residuals')
+        plt.show()
+
+        tsa.plot_acf(train_residuals, lags=30)
+        plt.title('Autocorrelation of Residuals (Training)')
+        plt.show()
+
 
     def main(self):
         self.name = "Sarima"
@@ -243,24 +263,42 @@ class Sarima(ForecastModel):
 
         error = self.calculate_metrics(test_data, forecast.predicted_mean)
         print("Linear Model - MSE:", error[0], "RMSE:", error[1], "MAE:", error[2], "MAPE:", error[3])
-        # print(model_fit.summary())
+
+        train_fitted_values = model_fit.fittedvalues
+        train_residuals = train_data.values - train_fitted_values
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(train_data.index, train_residuals, marker='o', linestyle='-')
+        plt.plot(train_data.index, train_data.values, marker='o', linestyle='-')
+        plt.plot(test_data.index, forecast.predicted_mean, marker='o', linestyle='-')
+        plt.axhline(0, linestyle='--', color='gray', linewidth=1)
+        plt.title('Residuals Over Time (Training)')
+        plt.xlabel('Time')
+        plt.ylabel('Residuals')
+        plt.show()
+
+        tsa.plot_acf(train_residuals, lags=30)
+        plt.title('Autocorrelation of Residuals (Training)')
+        plt.show()
 
 
 if __name__ == "__main__":
 
-    df = pd.read_csv("images/grid_search_sarimax_20241128_012826.csv")
-    min_rmse_index = df['RMSE'].idxmin()
-    best_row = df.loc[min_rmse_index]
-    print(best_row)
+    # df = pd.read_csv("images/grid_search_sarimax_20241128_012826.csv")
+    # min_rmse_index = df['RMSE'].idxmin()
+    # best_row = df.loc[min_rmse_index]
+    # print(best_row)
 
-    # path = "../data/open_meteo_tokyo_multivariative.csv"
-    # p = Problem.read_input(path)
+    path = "../data/open_meteo_tokyo_multivariative.csv"
+    p = Problem.read_input(path)
 
-    # ma = p.empty_solution()
+    ma = p.empty_solution()
+    ma.test()
+
     # ma.test()
     # ma.get_best()
     # ma.main()
     # ma.plot()
 
-    # c = ma.create_correlogram()
+    c = ma.create_correlogram()
     # c.acf_pacf(12)
